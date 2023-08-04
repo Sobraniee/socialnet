@@ -85,14 +85,14 @@ class Comment(models.Model):
 
 class Short(models.Model):
     user = models.ForeignKey(
-        to=Post,
+        to=User,
         on_delete=models.SET_NULL,
         null=True,
         blank=False,
         verbose_name='Автор',
-        related_name='posts'
+        related_name='Short'
     )
-    video = models.FileField('Видео', upload_to='video_post/', null=True, blank=True)
+    video = models.FileField('Видео', upload_to='video_post/', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     views_qty = models.PositiveIntegerField('Просмотры', default=0)
 
@@ -105,7 +105,7 @@ class Short(models.Model):
         return f'{self.video} - {self.created_at}'
 
 class SavedPosts(models.Model):
-    user = models.OneToOneField(User, verbose_name='', on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     post = models.ManyToManyField(Post, verbose_name='saved post', related_name='saved_posts')
 
     class Meta:
