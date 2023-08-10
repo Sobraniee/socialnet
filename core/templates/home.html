@@ -1,3 +1,5 @@
+{% extends 'base.html' %}
+{% block content %}
 <h1>
     Hello world
 </h1>
@@ -9,15 +11,19 @@
     <a href="/profile/{{ request.user.profile.id }}">
         Профиль {{ request.user.username }}
     </a>
-
 </div>
 <h2>
     Посты
 </h2>
+<ol>
 {% for post in posts %}
-<div>
+    <li>
     <a href="/posts/{{ post.id }}">
     {{ post.id }}. {{ post.name }}
     </a>
-</div>
+    </li>
 {% endfor %}
+</ol>
+{% endblock %}
+
+

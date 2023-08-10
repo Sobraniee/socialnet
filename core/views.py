@@ -1,5 +1,9 @@
-from django.shortcuts import render, HttpResponse
-from .models import Post, Profile, Short, Category
+from django.shortcuts import render, HttpResponse, redirect
+from .models import *
+from django.contrib.auth.models import User
+from .forms import CommentForm
+from django.db.models import Count
+
 def homepage(request):
     context = {}
     context["name"] = "Davlyat"
@@ -7,28 +11,110 @@ def homepage(request):
     context['posts'] = posts_list
     return render(request, 'home.html', context)
 
+
 def post_detail(request, id):
     context = {}
     post_object = Post.objects.get(id=id)
     context["post"] = post_object
-    return render(request, "post_info.html", context)
+    comment_form = CommentForm()
+    context['comment_form'] = comment_form
+    comment_list = Comment.objects.filter(post=post_object)
+    context['comments'] = comment_list
+    if request.method == "GET":
+        return render(request, "post_info.html", context)
+    elif request.method == "POST":
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.created_by = request.user
+            new_comment.post = post_object
+            new_comment.save()
+            return HttpResponse("done")
 
 def Contacts(request):
     return HttpResponse('Наши контакты')
+
+
 def about_us(request):
     return HttpResponse('Информация о нас')
+
 
 def profile_detail(request, id):
     context = {}
     context['profile'] = Profile.objects.get(id=id)
     return render(request, 'profile_detail.html', context)
 
-def short_video(request):
-    short_video = Short.objects.all()
-    return render(request, 'short.html', {'short_video':short_video})
 
-def Category(request):
+def shorts(request):
+    context = Short.objects.all()
+    return render(request, 'shorts.html', {'context': context})
+    # def shorts(request):
+    # context = {'short-list': Short.objects.all()}
+    # return render(request,'shorts.html', context)
+
+
+# def short_video(request):
+#     short_video_object = Short.objects.all()
+#     return render(request, 'short_video.html', {'short_video_object': short_video_object})
+
+
+def shorts_info(request, id):
+    # context = Short.objects.get(id=id)
+    # return render(request, 'short_info.html', {'context': context})
     context = {}
-    context['category'] = Category.object.get()
-    return render(request, 'category.html', context)
+    short_object = Short.objects.get(id=id)
+    context["short"] = short_object
+    return render(request, "short_info.html", context)
+
+def saved_posts(request):
+    posts = Post.objects.filter(saved_posts__user=request.user)
+    context = {'posts': posts}
+    return render(request, 'savedposts.html', context)
+
+def user_posts(request, user_id):
+    user = User.objects.get(id=user_id)
+    posts = Post.objects.filter(creator=user)
+    context = {'user': user, 'posts': posts}
+    return render(request, 'user_posts.html', context)
+
+def create_post(request):
+    if request.method == "GET":
+        return render(request, 'create_post_form.html')
+    elif request.method == "POST":
+        data = request.POST # словарь с данными с html-формы
+        #print(data)
+        new_post = Post()
+        new_post.name = data['post_name']
+        new_post.photo = request.FILES['photo']
+        new_post.description = data['description']
+        new_post.creator = request.user
+        new_post.save()
+        return HttpResponse('done')
+
+def add_short(request):
+    if request.method == "GET":
+        return render(request, 'short_form.html')
+    elif request.method == "POST":
+        new_short_object = Short(user=request.user, video=request.FILES["video_file"])
+        new_short_object.save()
+        return redirect('shorts-info', id=new_short_object.id)
+
+
+
+def add_saved(request):
+    if request.method == "POST":
+        post_id = request.POST['post_id']
+        post_object = Post.objects.get(id=post_id)
+        saved_post, created = SavedPosts.objects.get_or_create(user=request.user)
+        saved_post.post.add(post_object)
+        saved_post.save()
+        return redirect('/saved_posts/')
+def remove_saved(request):
+    if request.method == "POST":
+        post_id = request.POST['post_id']
+        post_object = Post.objects.get(id=post_id)
+        saved_post = SavedPosts.objects.get(user=request.user)
+        saved_post.post.remove(post_object)
+        saved_post.save()
+        return redirect('/saved_posts/')
 

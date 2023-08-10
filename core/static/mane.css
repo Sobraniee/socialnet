@@ -1,0 +1,15 @@
+    color: green;
+    font-size: 36px;
+}
+
+.post {
+    height: 200px;
+}
+
+.post img {
+    height: 150px;
+}
+
+.post:hover {
+    background-color: #ddd;
+}
