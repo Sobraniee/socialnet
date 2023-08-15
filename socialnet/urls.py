@@ -38,7 +38,8 @@ urlpatterns = [
     path('search/', search, name='search'),
     path('search-result/', search_result, name='search-result'),
     path('users/', include('userapp.urls')),
-    path('add-subscriber/<int:profile_id>', add_subscriber, name='add_subscriber')
+    path('add-subscriber/<int:profile_id>', add_subscriber, name='add_subscriber'),
+    path('remove-follow/<int:profile_id>', remove_follow, name='remove_follow'),
 
 
 ]

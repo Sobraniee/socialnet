@@ -12,24 +12,40 @@
         <div>{{ user.username }}</div>
         {% endfor %}
     </div>
-    <h2>Посты пользователя</h2>
-    <div class="row container">
+     <h2>Посты пользователя</h2>
+
+        <div class="row container">
         {% for post in profile.user.posts.all %}
             <div class="post col-lg-4 col-md-6">
                 <a href="/posts/{{ post.id }}">
                     {{ post.name }}
                 </a>
+                {% if post.photo %}
+                    <div>
+                        <a href="/posts/{{ post.id }}">
+                            <img src="{{ post.photo.url }}">
+                        </a>
+                    </div>
+                {% endif %}
+                <p>
+                    Лайки: {{ post.likes }}
+                </p>
 
             </div>
+
+        {% endfor %}
+
         <p>
-            { if request.user in profile.subscribers.all %}
-            <form>
+            {% if request.user in profile.subscribers.all %}
+            <form action="/remove-follow/{{ profile.id }}" method="POST">
+             {% csrf_token %}
         <button class="btn btn-danger">Отписаться</button>
     </form>
-        {% endfor %}
+            {% else %}
     <form action="/add-subscriber/{{ profile.id }}" method="POST">
         {% csrf_token %}
         <button class="btn btn-info"> Подписаться </button>
     </form>
+        {% endif %}
 {% endblock %}
         </p>

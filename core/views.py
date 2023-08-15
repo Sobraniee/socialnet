@@ -143,3 +143,10 @@ def add_subscriber(request, profile_id):
         profile.save()
         messages.success(request, "Вы успешно подписались!")
         return redirect(f'/profile/{profile.id}')
+
+def remove_follow(request, profile_id):
+        profile = Profile.objects.get(id=profile_id)
+        profile.subscribers.remove(profile_id)
+        profile.save()
+        messages.success(request, "Вы успешно отписались!")
+        return redirect(f'/profile/{profile.id}')
