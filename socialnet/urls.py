@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from core.views import *
 from django.conf import settings
 from django.conf.urls.static import static
@@ -23,7 +23,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', homepage),
-    path('posts/<int:id>/', post_detail),
+    path('posts/<int:id>/', post_detail, name='post-detail'),
     path('contacts/', Contacts),
     path('about_us/', about_us),
     path('profile/<int:id>/', profile_detail, name='profile'),
@@ -34,7 +34,12 @@ urlpatterns = [
     path('add-post/', create_post, name='add-post'),
     path('add-short/', add_short, name='add-short'),
     path('add-saved/', add_saved, name='add-saved'),
-    path('remove-saved/', remove_saved, name='remove-saved')
+    path('remove-saved/', remove_saved, name='remove-saved'),
+    path('search/', search, name='search'),
+    path('search-result/', search_result, name='search-result'),
+    path('users/', include('userapp.urls')),
+    path('add-subscriber/<int:profile_id>', add_subscriber, name='add_subscriber')
+
 
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -1,14 +1,17 @@
 from django.shortcuts import render, HttpResponse, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.db.models import Q
 from .models import *
 from django.contrib.auth.models import User
 from .forms import CommentForm
-from django.db.models import Count
 
 def homepage(request):
     context = {}
-    context["name"] = "Davlyat"
     posts_list = Post.objects.all()
     context['posts'] = posts_list
+    shorts_list = Short.objects.all()
+    context["shorts"] = shorts_list
     return render(request, 'home.html', context)
 
 
@@ -90,8 +93,11 @@ def create_post(request):
         new_post.creator = request.user
         new_post.save()
         return HttpResponse('done')
-
+# from django.contrib.auth.decorators import login_required
+@login_required(login_url='/users/sign-in/')
 def add_short(request):
+    # if not request.user.is_authenticated:
+    #     return redirect('/')
     if request.method == "GET":
         return render(request, 'short_form.html')
     elif request.method == "POST":
@@ -118,3 +124,22 @@ def remove_saved(request):
         saved_post.save()
         return redirect('/saved_posts/')
 
+def search(request):
+    return render(request, 'search.html')
+
+def search_result(request):
+    key_word = request.GET["key_word"]
+   # posts = Post.objects.filter(name_icontains=key_word)
+    posts = Post.objects.filter(
+        Q(name_icontains=key_word) |
+        Q(description_icontains=key_word)
+    )
+    context = {'post': posts}
+    return render(request, 'home.html', context)
+
+def add_subscriber(request, profile_id):
+        profile = Profile.objects.get(id=profile_id)
+        profile.subscribers.add(request.user)
+        profile.save()
+        messages.success(request, "Вы успешно подписались!")
+        return redirect(f'/profile/{profile.id}')

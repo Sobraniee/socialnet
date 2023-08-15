@@ -5,6 +5,8 @@ class Profile(models.Model):
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     nickname = models.CharField(max_length=55)
     description = models.TextField(null=True, blank=True)
+    subscribers = models.ManyToManyField(to=User, related_name='subscriber_user', blank=True)
+
 
 class Post(models.Model):
     STATUS_CHOICES = (

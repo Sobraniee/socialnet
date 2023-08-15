@@ -1,8 +1,35 @@
-<!DOCTYPE html>
-<html>
-<body>
-<h2>Профиль {{ profile.user.username }}</h2>
-<div>Ник: {{ profile.nickname }}</div>
-<div>{{ profile.description }}</div>
-</body>
-</html>
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Профиль: {{ profile.user.username }}</h2>
+    <div>Подписчики: {{ profile.subscribers.count }}</div>
+    <div>Ник: {{ profile.nickname }}</div>
+    <div>{{ profile.description }}</div>
+    <h3>Список подписчиков</h3>
+    <div>
+        {% for user in profile.subscribers.all %}
+        <div>{{ user.username }}</div>
+        {% endfor %}
+    </div>
+    <h2>Посты пользователя</h2>
+    <div class="row container">
+        {% for post in profile.user.posts.all %}
+            <div class="post col-lg-4 col-md-6">
+                <a href="/posts/{{ post.id }}">
+                    {{ post.name }}
+                </a>
+
+            </div>
+        <p>
+            { if request.user in profile.subscribers.all %}
+            <form>
+        <button class="btn btn-danger">Отписаться</button>
+    </form>
+        {% endfor %}
+    <form action="/add-subscriber/{{ profile.id }}" method="POST">
+        {% csrf_token %}
+        <button class="btn btn-info"> Подписаться </button>
+    </form>
+{% endblock %}
+        </p>
