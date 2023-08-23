@@ -20,7 +20,18 @@
 <div>
     Описание: {{ post.description }}
 </div>
+<div>
     Кол-во лайков: {{ post.likes }}
+ <form method="POST">
+             {% csrf_token %}
+        <button name="like">like</button>
+ </form>
+</div>
+     <form method="POST">
+             {% csrf_token %}
+        <button name="dislike">dislike</button>
+     </form>
+
 <div>
     {% if post in request.user.savedposts.post.all %}
     <form action="/remove-saved/" method="POST">

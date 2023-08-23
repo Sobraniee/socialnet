@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Shorts</h2>
+    {% for short in object_list %}
+        <div>
+            <hr>
+            <a href="{% url 'shorts-info-cbv' short.id %}">{{short.user }} - {{ short.created_at }}</a>
+            <div>
+                <video width="350px" src="{{ short.video.url }}"></video>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

@@ -1,10 +1,3 @@
-<h2>Short №{{ short.id }}</h2>
-<div>
-    Автор: {{ short.user.username }}
-</div>
-<div>
-    Кол-во просмотров: {{ short.views_qty }}
-</div>
 {% extends 'base.html' %}
 
 {% block content %}
@@ -22,4 +15,8 @@
     <div>
         Кол-во просмотров: {{ short.views_qty }}
     </div>
+<div>
+    Уникальные просмотры: {{ short.viewed_users.count }}
+</div>
+    <a href="{% url 'update-short' short.id %}" class="btn btn-info">Изменить</a>
 {% endblock %}

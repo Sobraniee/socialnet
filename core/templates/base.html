@@ -39,15 +39,36 @@
             <div class="my-focus">Интересное</div>
             <div class="my-focus">
               <a href="{% url 'shorts-list' %}">
-                Shorts
+                Shorts-CBV
               </a>
+            </div>
+                 <div class="my-focus">
+              <a href="{% url 'short-filter' %}">
+                Shorts-Filter
+              </a>
+                     <div class="my-focus">
+              <a href="{% url 'post-filter' %}">
+                Posts-filter
+              </a>
+            </div>
             </div>
           {% if request.user.is_authenticated %}
             <div class="my-focus">Сообщения</div>
-            <div class="my-focus">Уведомления</div>
+            <div class="my-focus">
+                <a href="{% url 'notification-cbv' %}">
+                Уведомления -
+                    {{ request.user.notification_set.count }}
+                </a>
+            </div>
+
             <div class="my-focus">
               <a href="{% url 'add-post' %}">
                 Добавить пост
+              </a>
+            </div>
+                 <div class="my-focus">
+              <a href="{% url 'add-post-form' %}">
+                Добавить пост (django-form)
               </a>
             </div>
             <div class="my-focus">
@@ -55,14 +76,26 @@
                 Добавить short
               </a>
             </div>
-            <div class="my-focus">
-              <a href="{% url 'profile' request.user.profile.id %}">
-                Профиль
-              </a>
+                {% if request.user.profile %}
+              <div class="my-focus">
+                <a href="{% url 'profile' request.user.profile.id %}">
+                  Профиль
+                </a>
+              </div>
+            {% else %}
+              <div class="my-focus">
+                <a href="{% url 'add-profile' %}">
+                  Добавить профиль
+                </a>
+              </div>
+            {% endif %}
             </div>
           {% else %}
+<!--            <div class="my-focus">-->
+<!--              <a href="">Регистрация</a>-->
+<!--            </div>-->
             <div class="my-focus">
-              <a href="{% url 'registration' %}">Регистрация</a>
+                 <a href="{% url 'sign-out' %}">Выход</a>
             </div>
             <div class="my-focus">
               <a href="{% url 'sign-in' %}">Вход</a>

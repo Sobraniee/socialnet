@@ -8,14 +8,20 @@
 </head>
 <body>
 {% extends 'base.html' %}
+{% load django_bootstrap5 %}
 
 {% block content %}
 {% include 'includes/search_form.html' %}
+<hr>
+    <form method="get">
+        {% bootstrap_form short_filter.form %}
+        <button class="btn btn-info">Применить</button>
+    </form>
     <h2>Shorts</h2>
-    {% for short in shorts_list %}
+    {% for short in short_filter.qs %}
         <div>
             <hr>
-            <a href="{% url 'shorts-info' short.id %}">
+            <a href="{% url 'short-info' short.id %}">
                 {{ short.user }} - {{ short.created_at }}
             </a>
             <div>

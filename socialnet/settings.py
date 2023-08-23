@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_bootstrap5',
     'core',
-    'userapp'
+    'userapp',
+    'django_filters'
 
 ]
 

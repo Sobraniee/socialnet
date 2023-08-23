@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% block content %}
+
+    {% include 'includes/search_form.html' %}
+
+      {% for post in filter.qs %}
+       <div class="post">
+
+                    <a href="/posts/{{ post.id }}">
+                        {{ post.name }}
+                    </a>
+                </div>
+             <div><a href="{% url 'profile' post.creator.profile.id %}">{{ post.creator }}</a>
+             </div>
+       </div>
+    {% if post.photo %}
+        <div>
+            <img src="{{ post.photo.url}}" height="200px">
+        </div>
+    {% endif %}
+    <hr>
+      <form method="get">
+        {% bootstrap_form filter.form  %}
+        <button class="btn btn-info">Применить</button>
+      </form>
+    <hr>
+{% empty %}
+        <div>Нет записей, удовлетворяющих указанным условиям</div>
+    {% endfor %}
+
+
+{% endblock %}
