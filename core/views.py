@@ -5,6 +5,7 @@ from django.db.models import Q
 from django_filters.views import FilterView
 from django.views import View
 from django.views.generic import ListView
+import requests
 from .filters import *
 def homepage(request):
     context = {}
@@ -353,3 +354,32 @@ class ShortInfoView(View):
             saved_post.save()
             return redirect('/saved_posts/')
 
+class PostsFromAPI(View):
+    def get(self, request):
+        context = {}
+        response = requests.get('https://jsonplaceholder.typicode.com/posts')
+        data = response.json()
+        context['posts'] = data
+        return render(request, 'core/posts_from_api.html', context)
+
+class PostDetailFromApi(View):
+    def get(self, request, *args, **kwargs):
+        id = kwargs['id']
+        response = requests.get(f'https://jsonplaceholder.typicode.com/posts/{id}')
+        post_data = response.json()
+        return render(request, 'core/post_detail.html', {'post': post_data})
+
+class TodosFromAPI(View):
+    def get(self,request):
+        context = {}
+        response = requests.get('https://jsonplaceholder.typicode.com/todos')
+        data = response.json()
+        context['todos'] = data
+        return render(request, 'core/todos_from_api.html', context)
+
+class TodosDetailFromApi(View):
+    def get(self, request, *args, **kwargs):
+        id = kwargs['id']
+        response = requests.get(f'https://jsonplaceholder.typicode.com/todos/{id}')
+        todo_data = response.json()
+        return render(request, 'core/todo_from_api.html', {'todo': todo_data})

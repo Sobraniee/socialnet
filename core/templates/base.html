@@ -50,6 +50,15 @@
               <a href="{% url 'post-filter' %}">
                 Posts-filter
               </a>
+             <div class="my-focus">
+              <a href="{% url 'posts-api' %}">
+                Posts API
+              </a>
+            </div>
+            <div class="my-focus">
+                <a href="{% url 'todos-api' %}">
+                    Todos API
+                </a>
             </div>
             </div>
           {% if request.user.is_authenticated %}

@@ -53,9 +53,11 @@ urlpatterns = [
     path('remove-follow/<int:profile_id>', remove_follow, name='remove_follow'),
     path('notifications/', notifications, name='notifications'),
     path('subscriber/<int:user_id>/', SubscribesView.as_view(), name='subscribes'),
-    path('notification-cbv/', NotificationListView.as_view(), name='notification-cbv')
-
-
+    path('notification-cbv/', NotificationListView.as_view(), name='notification-cbv'),
+    path('posts-api/', PostsFromAPI.as_view(), name='posts-api'),
+    path('posts-api/<int:id>/', PostDetailFromApi.as_view(), name='post-api'),
+    path('todos-api/', TodosFromAPI.as_view(), name='todos-api'),
+    path('todos-api/<int:id>/', TodosDetailFromApi.as_view(), name='todo-api')
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
